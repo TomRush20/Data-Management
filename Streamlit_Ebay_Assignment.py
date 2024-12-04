@@ -2,15 +2,19 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-ebay_cleaned_df = pd.read_csv(r"C:\Users\trush\OneDrive\Documents\WFU Grad School Info\BAN 6020 Data Management\Data\CleanRewardsData.csv")
+ebay_cleaned_df = pd.read_csv('EbayCleanedDataSample.csv')
 
-st.header('Ebay Data')
+st.header('Ebay Data by Brand')
 st.divider()
 
-st.subheader('Data Table')
-st.dataframe(ebay_cleaned_df, use_container_width=True)
+unique_brands = ebay_cleaned_df['Brand'].unique()
+unique_os = ebay_cleaned_df['OS'].unique()
 
-state_totals = ebay_cleaned_df.groupby('State Name')['Total Points Earned'].sum()
+brand = st.selectbox(label='Select a Brand', options=unique_brands)
+OS = st.radio(label='Select color', options=unique_os)
 
-st.subheader('Total Points Earned Per State')
-st.bar_chart(state_totals, horizontal=True)
+if OS:
+    filtered = ebay_cleaned_df[(ebay_cleaned_df['Brand'] == brand) & (ebay_cleaned_df['OS'] == OS)]
+    st.dataframe(filtered, use_container_width=True)
+else:
+    st.write('Choose an OS')
